@@ -49,3 +49,54 @@ def gameSimulationGameLength (a, b, p):
             b_temp += 1
             
     return (length)
+
+
+
+'''Funkcja zwraca liczbe wygranych'''
+
+def gameSimulationCountWinn (a, b, p):  
+
+    a_temp, b_temp = a, b
+
+    winnCounter = 0
+
+    while a_temp > 0 and b_temp > 0:
+        rand = random.uniform(0,1)
+        if rand < p:
+            a_temp += 1
+            b_temp -= 1
+
+            winnCounter +=1
+
+        else:
+            a_temp -= 1
+            b_temp += 1
+            
+    return (winnCounter)
+
+
+'''Funkcja zwraca tablice z kapitalem gracza A w kazdej iteracji'''
+
+def gameSimulationArr (a, b, p, n):  
+
+    a_temp, b_temp = a, b
+    data = []
+    tmp = 0
+
+    while a_temp > 0 and b_temp > 0 and tmp < n:
+        rand = random.uniform(0,1)
+        if rand < p:
+            a_temp += 1
+            b_temp -= 1
+            tmp +=1
+
+            data.append(a_temp)
+
+        else:
+            a_temp -= 1
+            b_temp += 1
+            tmp +=1
+
+            data.append(a_temp)
+            
+    return (data)
