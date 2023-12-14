@@ -14,6 +14,5 @@ b = 50
 for x in [1, 10, 50, 60, 70,80]:
     data = (module.gameSimulationArr (a, b, p, x))
 
-    print(data)
     plt.hist(data, bins=30, edgecolor='black')
     plt.show()

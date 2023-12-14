@@ -1,6 +1,7 @@
 import random
 import matplotlib.pyplot as plt
 from module import module
+import numpy as np
 
 
 def probabilityFunction (a, b, p, n):
@@ -10,24 +11,26 @@ def probabilityFunction (a, b, p, n):
 
 p = 0.5
 a = 0
-b = 0
 
 gameSimulationArray = []
 probabilityFunctionArray  =[] 
-a_index = []
 
-n = 100
 
-for a in range (100):
+a_values = np.linspace(1, 100, 100) 
+
+n = 10
+
+for a in a_values:
     b = 100 - a
-    gameSimulationArray.append(module.gameSimulation(a, b, p, n))
     probabilityFunctionArray.append(probabilityFunction(a,b,p,n))
-    a_index.append(a)
+
+    gameSimulationArray.append(module.gameSimulation(a, b, p, n))
+    
 
 
 plt.figure(figsize=(10, 6))
-plt.plot(a_index, gameSimulationArray, 'r')
-plt.plot(a_index, probabilityFunctionArray, 'b')
+plt.plot(a_values, gameSimulationArray, 'r')
+plt.plot(a_values, probabilityFunctionArray, 'b')
 plt.show()
 
 

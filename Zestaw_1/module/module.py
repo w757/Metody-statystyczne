@@ -9,8 +9,7 @@ def gameSimulation(a, b, p, n):
     sum_B = 0.0
 
     for _ in range (n):
-        a_temp = a
-        b_temp = b
+        a_temp, b_temp = a, b
 
         while a_temp > 0 and b_temp > 0:
             rand = random.uniform(0,1)
@@ -23,11 +22,9 @@ def gameSimulation(a, b, p, n):
                 b_temp += 1
 
         if a_temp == 0:
-            sum_B +=1
-        else:
             sum_A +=1
         
-    return (sum_B/n)
+    return sum_A / n
 
 
 '''Funkcja zwraca dugosc rozgrywki'''
