@@ -54,10 +54,12 @@ def gameSimulationGameLength (a, b, p):
 def gameSimulationCountWinn (a, b, p):  
 
     a_temp, b_temp = a, b
-
+    length = 0
     winnCounter = 0
+    data = []
 
     while a_temp > 0 and b_temp > 0:
+        length = length + 1
         rand = random.uniform(0,1)
         if rand < p:
             a_temp += 1
@@ -68,8 +70,10 @@ def gameSimulationCountWinn (a, b, p):
         else:
             a_temp -= 1
             b_temp += 1
+
+        data.append(winnCounter)
             
-    return (winnCounter)
+    return data, length 
 
 
 '''Funkcja zwraca tablice z kapitalem gracza A w kazdej iteracji'''
