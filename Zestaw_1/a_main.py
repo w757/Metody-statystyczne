@@ -13,7 +13,7 @@ x = (x + np.roll(x, -1))[:-1] / 2.0
 pdf = norm.pdf(x, 0, 1)
 
 
-plt.hist(numbers, bins=50, density=True, alpha=0.6, color='b')
+plt.hist(numbers, bins=50, density=True, alpha=0.6, color='b')  #density=True - normalizacja do 1
 plt.plot(x, pdf, 'r')
 
 plt.xlabel('Value')

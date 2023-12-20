@@ -6,6 +6,7 @@ def gameSimulation(a, b, p, n):
 
     a_temp, b_temp = a, b
     sum_A = 0.0
+    
     sum_B = 0.0
 
     for _ in range (n):
