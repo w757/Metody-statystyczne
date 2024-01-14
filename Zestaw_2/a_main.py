@@ -1,72 +1,43 @@
-'''
-Matematica - program do wykresow i obliczen
-
-
-matrixpow
-
-to do petla z n
-podniesienie wartosci macierzy do potegi 
-zapisanie wartosci i podniesienie do potegi 
-
-
-'''
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-def poteguj_macierz(macierz, N):
-    macierz = np.matrix(macierz)
-    if macierz.shape[0] != macierz.shape[1]:
-        raise ValueError("Macierz musi być kwadratowa")
-    
-    if N == 0:
-        return np.identity(macierz.shape[0])
-    if N == 1:
-        return macierz
-
-    wynik = macierz
-    for _ in range(1, N):
-        wynik = wynik * macierz
-
-    return wynik
-
-# Nowa macierz 3x3
-macierz = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+# Inicjalizacja macierzy stochastycznej
+C = np.array([[0.3, 0.6, 0.1],
+              [0.5, 0.2, 0.3],
+              [0.2, 0.45, 0.35]])
 
 # Zakres wartości N
-wartosci_N = range(1, 100)  # N od 1 do 20
+N_values_markov = range(0, 10)  
 
-# Rozmiar macierzy
-rozmiar_macierzy = len(macierz), len(macierz[0])
+# Listy do przechowywania wartości wszystkich elementów macierzy
+elements_C = []
 
-# Słownik przechowujący wartości dla każdego elementu macierzy
-wartosci_elementow = {(i, j): [] for i in range(rozmiar_macierzy[0]) for j in range(rozmiar_macierzy[1])}
+# Obliczanie potęg macierzy przez kolejne mnożenie
+for N in N_values_markov:
+    if N == 0:
+        # Dla N=0 używamy macierzy jednostkowej, ponieważ każda macierz do potęgi 0 daje macierz jednostkową
+        powered_matrix = np.identity(C.shape[0])
+    else:
+        powered_matrix = np.linalg.matrix_power(C, N)
+    
+    # Dodanie wszystkich elementów z aktualnie potęgowanej macierzy
+    elements_C.append(powered_matrix.flatten())
 
-# Obliczanie wartości dla każdego elementu macierzy
-for N in wartosci_N:
-    wynik = poteguj_macierz(macierz, N)
-    for i in range(rozmiar_macierzy[0]):
-        for j in range(rozmiar_macierzy[1]):
-            wartosci_elementow[(i, j)].append(wynik[i, j])
+# Przygotowanie danych do wykresu
+elements_C = np.array(elements_C)
 
-# Ustawienie kolorów dla wykresów
-kolory = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
+# Tworzenie wykresów dla każdego elementu
+plt.figure(figsize=(14, 8))
 
-# Tworzenie wykresu
-plt.figure(figsize=(12, 8))
-for i in range(rozmiar_macierzy[0]):
-    for j in range(rozmiar_macierzy[1]):
-        color_index = i * rozmiar_macierzy[1] + j
-        if color_index < len(kolory):
-            color = kolory[color_index]
-        else:
-            # Generowanie losowego koloru, jeśli skończą się kolory z listy
-            color = np.random.rand(3,)
-        plt.plot(wartosci_N, wartosci_elementow[(i, j)], marker='o', color=color, label=f'Element [{i}][{j}]')
+for i in range(C.shape[0]):
+    for j in range(C.shape[1]):
+        plt.plot(N_values_markov, elements_C[:, i * C.shape[1] + j], marker='o', label=f'Element C({i},{j})')
 
-plt.title('Wartości elementów macierzy 3x3 w zależności od N')
+
 plt.xlabel('N')
-plt.ylabel('Wartość')
-plt.legend()
+plt.ylabel('Wartość elementu')
+plt.legend(bbox_to_anchor=(1.04,0.5), loc="center left", borderaxespad=0)
 plt.grid(True)
+plt.tight_layout()
 plt.show()
