@@ -1,72 +1,47 @@
-'''
-Matematica - program do wykresow i obliczen
-
-
-matrixpow
-
-to do petla z n
-podniesienie wartosci macierzy do potegi 
-zapisanie wartosci i podniesienie do potegi 
-
-
-'''
-
 import numpy as np
 import matplotlib.pyplot as plt
 
-def poteguj_macierz(macierz, N):
-    macierz = np.matrix(macierz)
-    if macierz.shape[0] != macierz.shape[1]:
-        raise ValueError("Macierz musi być kwadratowa")
+# Inicjalizacja macierzy stochastycznej
+C = np.array([[0.64, 0.32, 0.04],
+              [0.4, 0.5, 0.1],
+              [0.25, 0.5, 0.25]])
+
+
+N_values_markov = range(0, 100) 
+
+# Listy do przechowywania wartości wszystkich elementów macierzy
+elements_C = []
+
+
+previous_matrix = np.identity(C.shape[0]) # poprzednia macierz dla pierwszej iteracji 
+
+for N in N_values_markov:
+    powered_matrix = np.dot(previous_matrix, C) # dla pierwszej  iteracji macierz jednostkowa 
     
-    if N == 0:
-        return np.identity(macierz.shape[0])
-    if N == 1:
-        return macierz
+    # Dodanie wszystkich elementów z aktualnie potęgowanej macierzy
+    elements_C.append(powered_matrix.flatten())
 
-    wynik = macierz
-    for _ in range(1, N):
-        wynik = wynik * macierz
+    # Sprawdzanie kryterium zbieżności
+    if N > 0:
+        if np.all(np.abs(powered_matrix - previous_matrix) < 1e-5):
+            print(f"Kryterium zbieżności osiągnięte dla N={N}")
+            break
 
-    return wynik
+    previous_matrix = powered_matrix
 
-# Nowa macierz 3x3
-macierz = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+# Przygotowanie danych do wykresu
+elements_C = np.array(elements_C)
 
-# Zakres wartości N
-wartosci_N = range(1, 100)  # N od 1 do 20
+# Tworzenie wykresów dla każdego elementu
+plt.figure(figsize=(14, 8))
 
-# Rozmiar macierzy
-rozmiar_macierzy = len(macierz), len(macierz[0])
+for i in range(C.shape[0]):
+    for j in range(C.shape[1]):
+        plt.plot(range(len(elements_C)), elements_C[:, i * C.shape[1] + j], marker='o', label=f'Element C({i},{j})')
 
-# Słownik przechowujący wartości dla każdego elementu macierzy
-wartosci_elementow = {(i, j): [] for i in range(rozmiar_macierzy[0]) for j in range(rozmiar_macierzy[1])}
-
-# Obliczanie wartości dla każdego elementu macierzy
-for N in wartosci_N:
-    wynik = poteguj_macierz(macierz, N)
-    for i in range(rozmiar_macierzy[0]):
-        for j in range(rozmiar_macierzy[1]):
-            wartosci_elementow[(i, j)].append(wynik[i, j])
-
-# Ustawienie kolorów dla wykresów
-kolory = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
-
-# Tworzenie wykresu
-plt.figure(figsize=(12, 8))
-for i in range(rozmiar_macierzy[0]):
-    for j in range(rozmiar_macierzy[1]):
-        color_index = i * rozmiar_macierzy[1] + j
-        if color_index < len(kolory):
-            color = kolory[color_index]
-        else:
-            # Generowanie losowego koloru, jeśli skończą się kolory z listy
-            color = np.random.rand(3,)
-        plt.plot(wartosci_N, wartosci_elementow[(i, j)], marker='o', color=color, label=f'Element [{i}][{j}]')
-
-plt.title('Wartości elementów macierzy 3x3 w zależności od N')
 plt.xlabel('N')
-plt.ylabel('Wartość')
-plt.legend()
+plt.ylabel('Wartość elementu')
+plt.legend(bbox_to_anchor=(1.04,0.5), loc="center left", borderaxespad=0)
 plt.grid(True)
+plt.tight_layout()
 plt.show()
